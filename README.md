@@ -22,3 +22,4 @@ python transcribe.py path/to/folder path/to/output --model base
 
 If no output folder is provided, the transcriptions will be written alongside the MP3 files in the input folder. Each MP3 is saved with the same base name and a `.txt` extension.
 
+
