@@ -14,11 +14,12 @@ You will also need `ffmpeg` installed on your system.
 
 ## Usage
 
-Run the `transcribe.py` script with the path to your audio file. Optionally specify an output text file and the model size (e.g. `tiny`, `base`, `small`, `medium`, `large`).
+Run the `transcribe.py` script with the path to a folder of MP3 files. Optionally specify an output folder and the model size (e.g. `tiny`, `base`, `small`, `medium`, `large`).
 
 ```bash
-python transcribe.py path/to/file.mp3 output.txt --model base
+python transcribe.py path/to/folder path/to/output --model base
 ```
 
-If no output file is provided, a `.txt` file with the same name as the input will be created.
+If no output folder is provided, the transcriptions will be written alongside the MP3 files in the input folder. Each MP3 is saved with the same base name and a `.txt` extension.
+
 
