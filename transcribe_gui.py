@@ -21,20 +21,25 @@ class TranscriptionApp:
 
 
         controls = tk.Frame(root)
-        controls.pack(padx=10, pady=5)
+        controls.pack(padx=10, pady=5, fill=tk.X)
 
         self.model_var = tk.StringVar(value="base")
-
         model_row = tk.Frame(controls)
-        model_row.pack(pady=(0, 5))
+        model_row.pack(fill=tk.X)
         tk.Label(model_row, text="Model:").pack(side=tk.LEFT)
-        tk.OptionMenu(model_row, self.model_var, "tiny", "base", "small", "medium", "large").pack(side=tk.LEFT)
+        tk.OptionMenu(
+            model_row, self.model_var, "tiny", "base", "small", "medium", "large"
+        ).pack(side=tk.LEFT)
 
-        button_row = tk.Frame(controls)
-        button_row.pack()
-        tk.Button(button_row, text="Add Files", command=self.add_files).pack(side=tk.LEFT, padx=5)
-        tk.Button(button_row, text="Remove Selected", command=self.remove_selected).pack(side=tk.LEFT, padx=5)
-        tk.Button(button_row, text="Start", command=self.start_transcription).pack(side=tk.LEFT, padx=5)
+        tk.Button(controls, text="Add Files", command=self.add_files).pack(
+            fill=tk.X, pady=2
+        )
+        tk.Button(controls, text="Remove Selected", command=self.remove_selected).pack(
+            fill=tk.X, pady=2
+        )
+        tk.Button(controls, text="Start", command=self.start_transcription).pack(
+            fill=tk.X, pady=2
+        )
 
 
         self.status_var = tk.StringVar()
