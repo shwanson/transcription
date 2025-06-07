@@ -24,18 +24,21 @@ class TranscriptionApp:
         controls.pack(padx=10, pady=5)
 
         self.model_var = tk.StringVar(value="base")
-        tk.Label(controls, text="Model:").pack(side=tk.LEFT)
-        tk.OptionMenu(controls, self.model_var, "tiny", "base", "small", "medium", "large").pack(side=tk.LEFT)
 
-        tk.Button(controls, text="Add Files", command=self.add_files).pack(side=tk.LEFT, padx=5)
+        model_row = tk.Frame(controls)
+        model_row.pack(pady=(0, 5))
+        tk.Label(model_row, text="Model:").pack(side=tk.LEFT)
+        tk.OptionMenu(model_row, self.model_var, "tiny", "base", "small", "medium", "large").pack(side=tk.LEFT)
 
-        tk.Button(controls, text="Remove Selected", command=self.remove_selected).pack(side=tk.LEFT, padx=5)
+        button_row = tk.Frame(controls)
+        button_row.pack()
+        tk.Button(button_row, text="Add Files", command=self.add_files).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_row, text="Remove Selected", command=self.remove_selected).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_row, text="Start", command=self.start_transcription).pack(side=tk.LEFT, padx=5)
 
-        tk.Button(controls, text="Start", command=self.start_transcription).pack(side=tk.LEFT)
 
         self.status_var = tk.StringVar()
         tk.Label(root, textvariable=self.status_var).pack(pady=5)
-
 
         self.progress_var = tk.DoubleVar(value=0)
         self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=1)
