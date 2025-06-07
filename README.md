@@ -23,3 +23,14 @@ python transcribe.py path/to/folder path/to/output --model base
 If no output folder is provided, the transcriptions will be written alongside the MP3 files in the input folder. Each MP3 is saved with the same base name and a `.txt` extension.
 
 
+
+## Graphical Interface
+
+A simple Tkinter-based GUI is provided in `transcribe_gui.py`. Run it with:
+
+```bash
+python transcribe_gui.py
+```
+
+Use the **Add Files** button to select one or more MP3 files. If you add a file by mistake, select it in the list and click **Remove Selected** (or press the **Delete** key) to remove it. Choose the Whisper model size from the dropdown and click **Start** to transcribe the selected files. Each transcription is saved next to its audio file with a `.txt` extension.
+
