@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox, ttk
 
 from pathlib import Path
 import threading
+import torch
 
 from transcribe import transcribe_audio
 
@@ -30,6 +31,14 @@ class TranscriptionApp:
         tk.OptionMenu(
             model_row, self.model_var, "tiny", "base", "small", "medium", "large"
         ).pack(side=tk.LEFT)
+
+        self.device_var = tk.StringVar(
+            value="cuda" if torch.cuda.is_available() else "cpu"
+        )
+        device_row = tk.Frame(controls)
+        device_row.pack(fill=tk.X)
+        tk.Label(device_row, text="Device:").pack(side=tk.LEFT)
+        tk.OptionMenu(device_row, self.device_var, "cpu", "cuda").pack(side=tk.LEFT)
 
         tk.Button(controls, text="Add Files", command=self.add_files).pack(
             fill=tk.X, pady=2
@@ -68,6 +77,10 @@ class TranscriptionApp:
             messagebox.showwarning("No files", "Please add MP3 files to transcribe.")
             return
 
+        if self.device_var.get() == "cuda" and not torch.cuda.is_available():
+            messagebox.showerror("CUDA Unavailable", "CUDA device not available. Please select CPU.")
+            return
+
         self.progress_var.set(0)
         self.progress_bar.config(maximum=len(self.files))
 
@@ -76,13 +89,19 @@ class TranscriptionApp:
     def _transcribe_files(self):
         self.status_var.set("Starting transcription...")
         model = self.model_var.get()
+        device = self.device_var.get()
 
         total = len(self.files)
         for index, path in enumerate(self.files, start=1):
             mp3_path = Path(path)
             out_file = mp3_path.with_suffix(".txt")
             self.status_var.set(f"Transcribing {mp3_path.name} ({index}/{total})...")
-            transcribe_audio(str(mp3_path), str(out_file), model_name=model)
+            transcribe_audio(
+                str(mp3_path),
+                str(out_file),
+                model_name=model,
+                device=device,
+            )
             self.progress_var.set(index)
             self.root.update_idletasks()
 
