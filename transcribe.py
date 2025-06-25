@@ -4,7 +4,11 @@ from pathlib import Path
 
 
 def transcribe_audio(
-    input_path: str, output_path: str, model_name: str = "base", fp16: bool | None = None
+    input_path: str,
+    output_path: str,
+    model_name: str = "base",
+    device: str | None = None,
+    fp16: bool | None = None,
 ):
     """Transcribe a single MP3 file using Whisper.
 
@@ -16,11 +20,16 @@ def transcribe_audio(
         Where to write the resulting text file.
     model_name: str, default "base"
         Whisper model size to use.
+    device: str | None, optional
+        "cpu" or "cuda" to force a device. ``None``/"auto" lets Whisper choose.
     fp16: bool | None, optional
         Whether to use half precision. If ``None``, the setting is determined by
         the device the model is loaded on.
     """
-    model = whisper.load_model(model_name)
+    load_args = {}
+    if device is not None and device != "auto":
+        load_args["device"] = device
+    model = whisper.load_model(model_name, **load_args)
     if fp16 is None:
         fp16 = model.device.type != "cpu"
     result = model.transcribe(input_path, fp16=fp16)
@@ -43,6 +52,11 @@ def main():
         default="base",
         help="Whisper model size to use (tiny, base, small, medium, large)",
     )
+    parser.add_argument(
+        "--device",
+        default="auto",
+        help="Device to use: auto, cpu, or cuda",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -62,7 +76,10 @@ def main():
     for index, mp3_file in enumerate(mp3_files, start=1):
         print(f"[{index}/{total}] Transcribing {mp3_file.name}")
         out_file = output_path / mp3_file.with_suffix(".txt").name
-        transcribe_audio(str(mp3_file), str(out_file), model_name=args.model)
+        device = None if args.device == "auto" else args.device
+        transcribe_audio(
+            str(mp3_file), str(out_file), model_name=args.model, device=device
+        )
         print(f"Saved {out_file}")
 
 
